@@ -8,7 +8,7 @@ from src.util.constants import get_playlists_dir, get_song_path, GetSongPathErro
 @click.group()
 @click.help_option('-h', '--help')
 def playlist() -> None:
-    """Rename, delete, list, add to, remove from, and create playlists"""
+    """Rename, delete, list, list songs, add to, remove from, and create playlists"""
 
 
 @playlist.command()
@@ -71,6 +71,34 @@ def list_playlists() -> None:
 
     for i, playlist_name in enumerate(os.listdir(playlists_path)):
         click.echo(f"{i+1}. {playlist_name}")
+
+
+@playlist.command(name="songs")
+@click.help_option('-h', '--help')
+@click.argument("name")
+def list_songs(name: str) -> None:
+    """List songs from a playlist
+
+    NAME is the name of the playlist to list songs from.
+    """
+
+    playlists_path = get_playlists_dir()
+    if not os.path.exists(playlists_path):
+        click.echo(f"Playlists directory doesn't exist at {playlists_path}.")
+        return
+
+    playlist_path = os.path.join(playlists_path, name)
+    if not os.path.exists(playlist_path):
+        click.echo(f"Playlist doesn't exist at {playlist_path}.")
+        return
+
+    with open(os.path.join(playlist_path, "songs.txt"), "r") as file:
+        lines = [line.strip() for line in file.readlines() if line.strip() != ""]
+
+        for i, line in enumerate(lines):
+            print(f"{i+1}. {line}")
+
+        file.close()
 
 
 @playlist.command()

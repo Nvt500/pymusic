@@ -177,7 +177,7 @@ Basic functionality with songs.
 ```text
 Usage: pymusic playlist [OPTIONS] COMMAND [ARGS]...
 
-  Rename, delete, list, add to, remove from, and create playlists
+  Rename, delete, list, list songs, add to, remove from, and create playlists
 
 Options:
   -h, --help  Show this message and exit.
@@ -189,6 +189,7 @@ Commands:
   list    List playlists
   remove  Remove a song from a playlist
   rename  Rename a playlist
+  songs   List songs from a playlist
 ```
 
 Basic functionality with playlists.
