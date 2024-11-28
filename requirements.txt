@@ -1,6 +1,6 @@
 click==8.1.7
-pytubefix==8.5.1
-moviepy==2.0.0
+pytubefix==8.6.0
+moviepy==2.1.1
 keyboard==0.13.5
 pygame==2.6.1
 PyWinCtl==0.4.1

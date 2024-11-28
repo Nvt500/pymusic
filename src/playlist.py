@@ -2,13 +2,13 @@ import os
 import shutil
 import click
 
-from src.util.constants import get_playlists_dir
+from src.util.constants import get_playlists_dir, get_song_path, GetSongPathError
 
 
 @click.group()
 @click.help_option('-h', '--help')
 def playlist() -> None:
-    """Rename, delete, list, and create playlists"""
+    """Rename, delete, list, add to, remove from, and create playlists"""
 
 
 @playlist.command()
@@ -71,6 +71,87 @@ def list_playlists() -> None:
 
     for i, playlist_name in enumerate(os.listdir(playlists_path)):
         click.echo(f"{i+1}. {playlist_name}")
+
+
+@playlist.command()
+@click.help_option('-h', '--help')
+@click.argument("name")
+def add(name: str) -> None:
+    """Add a song to a playlist
+
+    NAME is the name of the song to add.
+    """
+
+    song_path = get_song_path(name)
+    if isinstance(song_path, GetSongPathError):
+        return
+
+    if not name.endswith(".wav"):
+        name += ".wav"
+
+    playlists_path = get_playlists_dir()
+    if not os.path.exists(playlists_path):
+        click.echo(f"Playlists directory doesn't exist at {playlists_path}.")
+        return
+
+    playlist_name = click.prompt(f"What playlist to add to", type=click.STRING)
+
+    playlist_path = os.path.join(playlists_path, playlist_name)
+    if not os.path.exists(playlist_path):
+        click.echo(f"Playlist doesn't exist at {playlist_path}.")
+        return
+
+    with open(os.path.join(playlist_path, "songs.txt"), "r+") as file:
+        lines = [line.strip() for line in file.readlines() if line.strip() != ""]
+        lines.append(name)
+
+        file.seek(0)
+        file.truncate()
+        file.write("\n".join(lines))
+        file.close()
+
+    click.echo(f"Added {name} to {os.path.join(playlist_path, "songs.txt")}.")
+
+
+@playlist.command()
+@click.help_option('-h', '--help')
+@click.argument("name")
+def remove(name: str) -> None:
+    """Remove a song from a playlist
+
+    NAME is the name of the song to remove.
+    """
+
+    song_path = get_song_path(name)
+    if isinstance(song_path, GetSongPathError):
+        return
+
+    if not name.endswith(".wav"):
+        name += ".wav"
+
+    playlists_path = get_playlists_dir()
+    if not os.path.exists(playlists_path):
+        click.echo(f"Playlists directory doesn't exist at {playlists_path}.")
+        return
+
+    playlist_name = click.prompt(f"What playlist to remove from", type=click.STRING)
+
+    playlist_path = os.path.join(playlists_path, playlist_name)
+    if not os.path.exists(playlist_path):
+        click.echo(f"Playlist doesn't exist at {playlist_path}.")
+        return
+
+    with open(os.path.join(playlist_path, "songs.txt"), "r+") as file:
+        lines = [line.strip() for line in file.readlines() if line.strip() != ""]
+        while lines.count(name) > 0:
+            lines.remove(lines[lines.index(name)])
+
+        file.seek(0)
+        file.truncate()
+        file.write("\n".join(lines))
+        file.close()
+
+    click.echo(f"Removed {name} from {os.path.join(playlist_path, "songs.txt")}.")
 
 
 @playlist.command()

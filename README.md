@@ -11,7 +11,39 @@ Or you can run the ```init``` command to create them.
 ```
 
 It downloads music from YouTube using ```pytubefix``` and can download individual songs or entire 
-playlists as long as it is public.
+playlists as long as it's public.
+
+# Installation
+
+Either download the executable from the releases or build it yourself with something like 
+```pyinstaller```.
+
+Simply
+
+```text
+> pyinstaller src/pymusic.py --onefile --console
+```
+
+Or use ```--onedir``` to reduce start up time
+
+```text
+> pyinstaller src/pymusic.py --onedir --console
+```
+
+To isolate the build files into a single directory where ```executable``` is the directory 
+name.
+
+```text
+> pyinstaller src/pymusic.py --onefile --console --distpath executable --workpath executable --specpath executable
+```
+
+Or use ```--onedir``` to reduce start up time
+
+```text
+> pyinstaller src/pymusic.py --onedir --console --distpath executable --workpath executable/build --specpath executable
+```
+
+You can also use the build scripts ```build_one_file.py``` or ```build_one_dir.py```.
 
 # Usage
 
@@ -121,6 +153,45 @@ Options:
 
 Select a song from all songs, playlist from all playlists, or song from a playlist. Easier than
 typing the entire song/playlist name if it has a super long name.
+
+## Song
+
+```text
+Usage: pymusic song [OPTIONS] COMMAND [ARGS]...
+
+  Rename, delete, and list songs
+
+Options:
+  -h, --help  Show this message and exit.
+
+Commands:
+  delete  Delete a song
+  list    List songs
+  rename  Rename a song
+```
+
+Basic functionality with songs.
+
+## Playlist
+
+```text
+Usage: pymusic playlist [OPTIONS] COMMAND [ARGS]...
+
+  Rename, delete, list, add to, remove from, and create playlists
+
+Options:
+  -h, --help  Show this message and exit.
+
+Commands:
+  add     Add a song to a playlist
+  create  Create a playlist
+  delete  Delete a playlist
+  list    List playlists
+  remove  Remove a song from a playlist
+  rename  Rename a playlist
+```
+
+Basic functionality with playlists.
 
 # Docker Support
 

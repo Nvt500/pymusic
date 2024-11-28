@@ -12,7 +12,7 @@ def get_playlists_dir() -> str:
     return os.path.join(get_executable_path(), "playlists")
 
 def get_executable_path() -> str:
-    return os.getcwd()#os.path.dirname(sys.argv[0])
+    return os.path.dirname(sys.argv[0])
 
 
 class GetSongPathError(Enum):

@@ -10,6 +10,7 @@ from src.util.constants import get_songs_dir, get_playlists_dir
 
 @click.group()
 @click.help_option('-h', '--help')
+@click.version_option('0.1.0', '-v', '--version', message='%(prog)s %(version)s', prog_name='pymusic')
 def cli() -> None:
     """A cli to download and play music."""
     pass
@@ -27,7 +28,14 @@ def init() -> None:
     os.makedirs(songs_path, exist_ok=True)
     os.makedirs(playlists_path, exist_ok=True)
 
+    click.echo(f"Created:\n{songs_path}\n{playlists_path}")
+
+
 cli.add_command(play)
 cli.add_command(download)
 cli.add_command(song)
 cli.add_command(playlist)
+
+
+if __name__ == '__main__':
+    cli()
