@@ -2,8 +2,7 @@ import os
 import time
 import wave
 import click
-import pygetwindow
-from enum import Enum
+from pywinctl import getActiveWindowTitle
 from random import shuffle
 if os.name == "nt":
     import winsound
@@ -13,14 +12,14 @@ os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "hide"
 from pygame import mixer
 
 from src.util.key_handler import KeyHandler
-from src.util.constants import get_songs_dir, get_playlists_dir
+from src.util.constants import get_songs_dir, get_playlists_dir, get_song_path, GetSongPathError
 from src.util.selector import Selector
 
 
 @click.group()
 @click.help_option('-h', '--help')
 def play() -> None:
-    """Play music."""
+    """Play music"""
 
 
 @play.command()
@@ -38,7 +37,7 @@ def song(name: str, low_cpu: bool) -> None:
 
 def _song(name: str, low_cpu) -> None:
 
-    terminal_name = pygetwindow.getActiveWindowTitle()
+    terminal_name = getActiveWindowTitle()
 
     if not low_cpu:
         mixer.init()
@@ -57,29 +56,7 @@ def _song(name: str, low_cpu) -> None:
         click.echo()
 
 
-class GetSongPathError(Enum):
-    NO_SONGS_DIR = 0,
-    NO_SONG_FILE = 1,
 
-def get_song_path(name: str) -> str | GetSongPathError:
-
-    # Get path to songs folder
-    songs_path = get_songs_dir()
-    if not os.path.exists(songs_path):
-        click.echo(f"Songs directory doesn't exist at {songs_path}.")
-        return GetSongPathError.NO_SONGS_DIR
-
-    # Add .wav if not specified
-    if not name.endswith(".wav"):
-        name += ".wav"
-
-    # Get path to song
-    song_path = os.path.join(songs_path, name)
-    if not os.path.exists(song_path):
-        click.echo(f"The song {song_path} doesn't exist.")
-        return GetSongPathError.NO_SONG_FILE
-
-    return song_path
 
 
 @play.command()
@@ -98,7 +75,7 @@ def playlist(name: str, random: bool, low_cpu: bool) -> None:
 
 def _playlist(name: str, random: bool, low_cpu: bool) -> None:
 
-    terminal_name = pygetwindow.getActiveWindowTitle()
+    terminal_name = getActiveWindowTitle()
 
     if not low_cpu:
         mixer.init()

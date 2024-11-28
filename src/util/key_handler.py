@@ -1,5 +1,5 @@
 import keyboard
-import pygetwindow
+from pywinctl import getActiveWindowTitle
 
 
 class KeyHandler:
@@ -28,7 +28,7 @@ class KeyHandler:
         self.ctrl_and_c_dict[event.name] = False
 
     def window_is_terminal(self) -> bool:
-        return pygetwindow.getActiveWindowTitle() == self.terminal_name
+        return getActiveWindowTitle() == self.terminal_name
 
     def getch(self) -> str | None:
         if self.window_is_terminal():

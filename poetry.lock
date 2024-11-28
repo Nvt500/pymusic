@@ -37,6 +37,23 @@ files = [
 ]
 
 [[package]]
+name = "ewmhlib"
+version = "0.2"
+description = "Extended Window Manager Hints implementation in Python 3"
+optional = false
+python-versions = "*"
+files = [
+    {file = "EWMHlib-0.2-py3-none-any.whl", hash = "sha256:f5b07d8cfd4c7734462ee744c32d490f2f3233fa7ab354240069344208d2f6f5"},
+]
+
+[package.dependencies]
+python-xlib = {version = ">=0.21", markers = "sys_platform == \"linux\""}
+typing-extensions = ">=4.4.0"
+
+[package.extras]
+dev = ["mypy (>=0.990)", "types-python-xlib (>=0.32)", "types-setuptools (>=65.5)"]
+
+[[package]]
 name = "imageio"
 version = "2.36.0"
 description = "Library for reading and writing a wide range of image, video, scientific, and volumetric data formats."
@@ -103,26 +120,26 @@ pyobjc = {version = "*", markers = "sys_platform == \"darwin\""}
 
 [[package]]
 name = "moviepy"
-version = "2.0.0"
+version = "2.1.1"
 description = "Video editing with Python"
 optional = false
 python-versions = "*"
 files = [
-    {file = "moviepy-2.0.0-py3-none-any.whl", hash = "sha256:c38f2db676f46c7beafeeb5b545eae88dcc252021500fb2ab3cd248dffd41ca6"},
-    {file = "moviepy-2.0.0.tar.gz", hash = "sha256:3affb0343626f026c11e7a8e42c9b2fbb5b2253e5c8988cb7930c1bd9b0d7c93"},
+    {file = "moviepy-2.1.1-py3-none-any.whl", hash = "sha256:b236a794c1bc00162613f08b5b5a862531ac39666b6943161c1f46a4dc8d3064"},
+    {file = "moviepy-2.1.1.tar.gz", hash = "sha256:0210336944fcc88a1841fe7ca3701f8f449eead222f9d1665d11d3b8fa753454"},
 ]
 
 [package.dependencies]
 decorator = ">=4.0.2,<6.0"
 imageio = ">=2.5,<3.0"
-imageio-ffmpeg = ">=0.2.0"
+imageio_ffmpeg = ">=0.2.0"
 numpy = ">=1.25.0"
 pillow = ">=9.2.0,<11.0"
 proglog = "<=1.0.0"
 python-dotenv = ">=0.10"
 
 [package.extras]
-doc = ["Sphinx (==6.*)", "numpydoc (<2.0)", "pydata-sphinx-theme (==0.13)", "sphinx-design"]
+doc = ["Sphinx (==6.*)", "numpydoc (<2.0)", "pydata-sphinx-theme (==0.13)", "sphinx_design"]
 lint = ["black (>=23.7.0)", "flake8 (>=6.0.0)", "flake8-absolute-import (>=1.0)", "flake8-docstrings (>=1.7.0)", "flake8-implicit-str-concat (==0.4.0)", "flake8-rst-docstrings (>=0.3)", "isort (>=5.12)", "pre-commit (>=3.3)"]
 test = ["coveralls (>=3.0,<4.0)", "pytest (>=3.0.0,<7.0.0)", "pytest-cov (>=2.5.1,<3.0)"]
 
@@ -371,17 +388,24 @@ files = [
 ]
 
 [[package]]
-name = "pygetwindow"
-version = "0.0.9"
-description = "A simple, cross-platform module for obtaining GUI information on application's windows."
+name = "pymonctl"
+version = "0.92"
+description = "Cross-Platform toolkit to get info on and control monitors connected"
 optional = false
 python-versions = "*"
 files = [
-    {file = "PyGetWindow-0.0.9.tar.gz", hash = "sha256:17894355e7d2b305cd832d717708384017c1698a90ce24f6f7fbf0242dd0a688"},
+    {file = "PyMonCtl-0.92-py3-none-any.whl", hash = "sha256:2495d8dab78f9a7dbce37e74543e60b8bd404a35c3108935697dda7768611b5a"},
 ]
 
 [package.dependencies]
-pyrect = "*"
+ewmhlib = {version = ">=0.1", markers = "sys_platform == \"linux\""}
+pyobjc = {version = ">=8.1", markers = "sys_platform == \"darwin\""}
+python-xlib = {version = ">=0.21", markers = "sys_platform == \"linux\""}
+pywin32 = {version = ">=302", markers = "sys_platform == \"win32\""}
+typing-extensions = ">=4.4.0"
+
+[package.extras]
+dev = ["mypy (>=0.990)", "pywinctl (>=0.3)", "types-python-xlib (>=0.32)", "types-pywin32 (>=305.0.0.3)", "types-setuptools (>=65.5)"]
 
 [[package]]
 name = "pyobjc"
@@ -3234,16 +3258,6 @@ pyobjc-core = ">=10.3.1"
 pyobjc-framework-Cocoa = ">=10.3.1"
 
 [[package]]
-name = "pyrect"
-version = "0.2.0"
-description = "PyRect is a simple module with a Rect class for Pygame-like rectangular areas."
-optional = false
-python-versions = "*"
-files = [
-    {file = "PyRect-0.2.0.tar.gz", hash = "sha256:f65155f6df9b929b67caffbd57c0947c5ae5449d3b580d178074bffb47a09b78"},
-]
-
-[[package]]
 name = "python-dotenv"
 version = "1.0.1"
 description = "Read key-value pairs from a .env file and set them as environment variables"
@@ -3258,15 +3272,98 @@ files = [
 cli = ["click (>=5.0)"]
 
 [[package]]
+name = "python-xlib"
+version = "0.33"
+description = "Python X Library"
+optional = false
+python-versions = "*"
+files = [
+    {file = "python-xlib-0.33.tar.gz", hash = "sha256:55af7906a2c75ce6cb280a584776080602444f75815a7aff4d287bb2d7018b32"},
+    {file = "python_xlib-0.33-py2.py3-none-any.whl", hash = "sha256:c3534038d42e0df2f1392a1b30a15a4ff5fdc2b86cfa94f072bf11b10a164398"},
+]
+
+[package.dependencies]
+six = ">=1.10.0"
+
+[[package]]
 name = "pytubefix"
-version = "8.5.1"
+version = "8.6.0"
 description = "Python3 library for downloading YouTube Videos."
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "pytubefix-8.5.1-py3-none-any.whl", hash = "sha256:5cc89cdfaa9c3c02a6af11d98a21df28cf9a421def60f44b96597569514ba5a4"},
-    {file = "pytubefix-8.5.1.tar.gz", hash = "sha256:2654547d7fd389447624bd22f148a4f6fc3f398d8e97249fe899b94481471158"},
+    {file = "pytubefix-8.6.0-py3-none-any.whl", hash = "sha256:ddead20322652c75b252cbc6c7080d4ad3fc7a4902ae542524908e0eccb9e37a"},
+    {file = "pytubefix-8.6.0.tar.gz", hash = "sha256:03e916802a3de0f668933887823693591e772a7bfcf6ee18474e0657955c5f94"},
 ]
+
+[[package]]
+name = "pywin32"
+version = "308"
+description = "Python for Window Extensions"
+optional = false
+python-versions = "*"
+files = [
+    {file = "pywin32-308-cp310-cp310-win32.whl", hash = "sha256:796ff4426437896550d2981b9c2ac0ffd75238ad9ea2d3bfa67a1abd546d262e"},
+    {file = "pywin32-308-cp310-cp310-win_amd64.whl", hash = "sha256:4fc888c59b3c0bef905ce7eb7e2106a07712015ea1c8234b703a088d46110e8e"},
+    {file = "pywin32-308-cp310-cp310-win_arm64.whl", hash = "sha256:a5ab5381813b40f264fa3495b98af850098f814a25a63589a8e9eb12560f450c"},
+    {file = "pywin32-308-cp311-cp311-win32.whl", hash = "sha256:5d8c8015b24a7d6855b1550d8e660d8daa09983c80e5daf89a273e5c6fb5095a"},
+    {file = "pywin32-308-cp311-cp311-win_amd64.whl", hash = "sha256:575621b90f0dc2695fec346b2d6302faebd4f0f45c05ea29404cefe35d89442b"},
+    {file = "pywin32-308-cp311-cp311-win_arm64.whl", hash = "sha256:100a5442b7332070983c4cd03f2e906a5648a5104b8a7f50175f7906efd16bb6"},
+    {file = "pywin32-308-cp312-cp312-win32.whl", hash = "sha256:587f3e19696f4bf96fde9d8a57cec74a57021ad5f204c9e627e15c33ff568897"},
+    {file = "pywin32-308-cp312-cp312-win_amd64.whl", hash = "sha256:00b3e11ef09ede56c6a43c71f2d31857cf7c54b0ab6e78ac659497abd2834f47"},
+    {file = "pywin32-308-cp312-cp312-win_arm64.whl", hash = "sha256:9b4de86c8d909aed15b7011182c8cab38c8850de36e6afb1f0db22b8959e3091"},
+    {file = "pywin32-308-cp313-cp313-win32.whl", hash = "sha256:1c44539a37a5b7b21d02ab34e6a4d314e0788f1690d65b48e9b0b89f31abbbed"},
+    {file = "pywin32-308-cp313-cp313-win_amd64.whl", hash = "sha256:fd380990e792eaf6827fcb7e187b2b4b1cede0585e3d0c9e84201ec27b9905e4"},
+    {file = "pywin32-308-cp313-cp313-win_arm64.whl", hash = "sha256:ef313c46d4c18dfb82a2431e3051ac8f112ccee1a34f29c263c583c568db63cd"},
+    {file = "pywin32-308-cp37-cp37m-win32.whl", hash = "sha256:1f696ab352a2ddd63bd07430080dd598e6369152ea13a25ebcdd2f503a38f1ff"},
+    {file = "pywin32-308-cp37-cp37m-win_amd64.whl", hash = "sha256:13dcb914ed4347019fbec6697a01a0aec61019c1046c2b905410d197856326a6"},
+    {file = "pywin32-308-cp38-cp38-win32.whl", hash = "sha256:5794e764ebcabf4ff08c555b31bd348c9025929371763b2183172ff4708152f0"},
+    {file = "pywin32-308-cp38-cp38-win_amd64.whl", hash = "sha256:3b92622e29d651c6b783e368ba7d6722b1634b8e70bd376fd7610fe1992e19de"},
+    {file = "pywin32-308-cp39-cp39-win32.whl", hash = "sha256:7873ca4dc60ab3287919881a7d4f88baee4a6e639aa6962de25a98ba6b193341"},
+    {file = "pywin32-308-cp39-cp39-win_amd64.whl", hash = "sha256:71b3322d949b4cc20776436a9c9ba0eeedcbc9c650daa536df63f0ff111bb920"},
+]
+
+[[package]]
+name = "pywinbox"
+version = "0.7"
+description = "Cross-Platform and multi-monitor toolkit to handle rectangular areas and windows box"
+optional = false
+python-versions = "*"
+files = [
+    {file = "PyWinBox-0.7-py3-none-any.whl", hash = "sha256:8b2506a8dd7afa0a910b368762adfac885274132ef9151b0c81b0d2c6ffd6f83"},
+]
+
+[package.dependencies]
+ewmhlib = {version = ">=0.1", markers = "sys_platform == \"linux\""}
+pyobjc = {version = ">=8.1", markers = "sys_platform == \"darwin\""}
+python-xlib = {version = ">=0.21", markers = "sys_platform == \"linux\""}
+pywin32 = {version = ">=302", markers = "sys_platform == \"win32\""}
+typing-extensions = ">=4.4.0"
+
+[package.extras]
+dev = ["mypy (>=0.990)", "pywinctl (>=0.3)", "types-python-xlib (>=0.32)", "types-pywin32 (>=305.0.0.3)", "types-setuptools (>=65.5)"]
+
+[[package]]
+name = "pywinctl"
+version = "0.4.1"
+description = "Cross-Platform toolkit to get info on and control windows on screen"
+optional = false
+python-versions = ">=3.9"
+files = [
+    {file = "PyWinCtl-0.4.1-py3-none-any.whl", hash = "sha256:4d875e22969e1c6239d8c73156193630aaab876366167b8d97716f956384b089"},
+]
+
+[package.dependencies]
+ewmhlib = {version = ">=0.2", markers = "sys_platform == \"linux\""}
+pymonctl = ">=0.92"
+pyobjc = {version = ">=8.1", markers = "sys_platform == \"darwin\""}
+python-xlib = {version = ">=0.21", markers = "sys_platform == \"linux\""}
+pywin32 = {version = ">=302", markers = "sys_platform == \"win32\""}
+pywinbox = ">=0.7"
+typing-extensions = ">=4.4.0"
+
+[package.extras]
+dev = ["ewmhlib (>=0.2)", "mypy (>=0.990)", "myst-parser", "types-python-xlib (>=0.32)", "types-pywin32 (>=305.0.0.3)", "types-setuptools (>=65.5)"]
 
 [[package]]
 name = "setuptools"
@@ -3289,27 +3386,49 @@ test = ["build[virtualenv] (>=1.0.3)", "filelock (>=3.4.0)", "ini2toml[lite] (>=
 type = ["importlib_metadata (>=7.0.2)", "jaraco.develop (>=7.21)", "mypy (>=1.12,<1.14)", "pytest-mypy"]
 
 [[package]]
+name = "six"
+version = "1.16.0"
+description = "Python 2 and 3 compatibility utilities"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*"
+files = [
+    {file = "six-1.16.0-py2.py3-none-any.whl", hash = "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"},
+    {file = "six-1.16.0.tar.gz", hash = "sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926"},
+]
+
+[[package]]
 name = "tqdm"
-version = "4.67.0"
+version = "4.67.1"
 description = "Fast, Extensible Progress Meter"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "tqdm-4.67.0-py3-none-any.whl", hash = "sha256:0cd8af9d56911acab92182e88d763100d4788bdf421d251616040cc4d44863be"},
-    {file = "tqdm-4.67.0.tar.gz", hash = "sha256:fe5a6f95e6fe0b9755e9469b77b9c3cf850048224ecaa8293d7d2d31f97d869a"},
+    {file = "tqdm-4.67.1-py3-none-any.whl", hash = "sha256:26445eca388f82e72884e0d580d5464cd801a3ea01e63e5601bdff9ba6a48de2"},
+    {file = "tqdm-4.67.1.tar.gz", hash = "sha256:f8aef9c52c08c13a65f30ea34f4e5aac3fd1a34959879d7e59e63027286627f2"},
 ]
 
 [package.dependencies]
 colorama = {version = "*", markers = "platform_system == \"Windows\""}
 
 [package.extras]
-dev = ["pytest (>=6)", "pytest-cov", "pytest-timeout", "pytest-xdist"]
+dev = ["nbval", "pytest (>=6)", "pytest-asyncio (>=0.24)", "pytest-cov", "pytest-timeout"]
 discord = ["requests"]
 notebook = ["ipywidgets (>=6)"]
 slack = ["slack-sdk"]
 telegram = ["requests"]
 
+[[package]]
+name = "typing-extensions"
+version = "4.12.2"
+description = "Backported and Experimental Type Hints for Python 3.8+"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "typing_extensions-4.12.2-py3-none-any.whl", hash = "sha256:04e5ca0351e0f3f85c6853954072df659d0d13fac324d0072316b67d7794700d"},
+    {file = "typing_extensions-4.12.2.tar.gz", hash = "sha256:1a7ead55c7e559dd4dee8856e3a88b41225abfe1ce8df57b7c13915fe121ffb8"},
+]
+
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.13"
-content-hash = "0a73f1e23c555321dc107bdeb3ed00dd331cd60bd5b134c242addb9d4427353b"
+content-hash = "8c781e6d7914e9285abd61dada76fc8f75c6dc5c829599b7c4d9819936bb6e59"

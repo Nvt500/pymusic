@@ -121,3 +121,30 @@ Options:
 
 Select a song from all songs, playlist from all playlists, or song from a playlist. Easier than
 typing the entire song/playlist name if it has a super long name.
+
+# Docker Support
+
+Docker probably won't work because ```pywinctl``` can't get the window name and it might not be 
+able to access the local filesystem since it is enclosed. And I ain't doing all that. If you 
+want to make it work you probably want to change some stuff to get started. The dockerfile 
+builds fine though.
+
+Line 4-6 in ```pymusic.py``` for some reason.
+```python
+from src.play.play import play
+from src.download.download import download
+from src.util.constants import get_songs_dir, get_playlists_dir
+```
+To
+```python
+from play.play import play
+from download.download import download
+from util.constants import get_songs_dir, get_playlists_dir
+```
+
+Line 10-11 in ```constants.py``` it gets the executable path so either hard code it or figure 
+out how to do it dynamically.
+```python
+def get_executable_path() -> str:
+    return os.path.dirname(sys.argv[0])
+```
