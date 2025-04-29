@@ -26,16 +26,17 @@ def play() -> None:
 @click.help_option('-h', '--help')
 @click.argument("name")
 @click.option("-l", "--low-cpu", "low_cpu", default=False, is_flag=True, help="Stripped down music player to hopefully take up less resources")
-def song(name: str, low_cpu: bool) -> None:
+@click.option("-r", "--repeat", "repeat", default=False, is_flag=True, help="Repeat a song (forever)")
+def song(name: str, low_cpu: bool, repeat: bool) -> None:
     """Play song"""
 
     if low_cpu and os.name != "nt":
         click.echo("Low CPU mode is only for windows.")
         return
 
-    _song(name, low_cpu)
+    _song(name, low_cpu, repeat)
 
-def _song(name: str, low_cpu) -> None:
+def _song(name: str, low_cpu: bool, repeat: bool = False) -> None:
 
     terminal_name = getActiveWindowTitle()
 
@@ -50,13 +51,14 @@ def _song(name: str, low_cpu) -> None:
     click.clear()
 
     # Play song
-    try:
-        play_song(song_path, low_cpu, terminal_name)
-    except KeyboardInterrupt:
-        click.echo()
-
-
-
+    while True:
+        try:
+            play_song(song_path, low_cpu, terminal_name)
+        except KeyboardInterrupt:
+            click.echo()
+            break
+        if not repeat:
+            break
 
 
 @play.command()
@@ -109,6 +111,8 @@ def _playlist(name: str, random: bool, low_cpu: bool) -> None:
 
     click.clear()
 
+    playlist_volume = [10]
+
     # Play each song
     click.echo(f"Playing playlist {name}.\nCtrl-C to quit.\n")
     try:
@@ -120,12 +124,12 @@ def _playlist(name: str, random: bool, low_cpu: bool) -> None:
             elif song_path is GetSongPathError.NO_SONGS_DIR:
                 return
 
-            play_song(song_path, low_cpu, terminal_name)
+            play_song(song_path, low_cpu, terminal_name, playlist_volume)
     except KeyboardInterrupt:
         click.echo()
 
 
-def play_song(song_path: str, low_cpu, terminal_name: str) -> None:
+def play_song(song_path: str, low_cpu, terminal_name: str, volume_pointer: list[int] = None) -> None:
 
     if low_cpu:
         click.echo(f"Playing {os.path.basename(song_path)}.\n")
@@ -150,7 +154,8 @@ def play_song(song_path: str, low_cpu, terminal_name: str) -> None:
     then = now
     time_passed = 0.0
 
-    volume = 10
+    volume: int = volume_pointer[0] if volume_pointer is not None else 10
+
     sound.set_volume(volume / 10)
 
     handler = KeyHandler(terminal_name)
@@ -189,6 +194,9 @@ def play_song(song_path: str, low_cpu, terminal_name: str) -> None:
     handler.close()
 
     click.echo("\n")
+
+    if volume_pointer is not None:
+        volume_pointer[0] = volume
 
 
 @play.command()

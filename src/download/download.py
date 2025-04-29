@@ -71,7 +71,7 @@ def download_playlist(url, oauth: bool, replace: bool, sync: bool, max_workers: 
 def download_song(url: str, oauth: bool, replace: bool) -> str:
 
     # Get YouTube object
-    youtube = YouTube(url, use_oauth=oauth, allow_oauth_cache=oauth)
+    youtube = YouTube(url, use_oauth=oauth, allow_oauth_cache=oauth)#, use_po_token=True)
     songs_path = get_songs_dir()
 
     if not os.path.exists(songs_path) and click.confirm(f"{songs_path} does not exist, do you want to create it?", abort=True):
