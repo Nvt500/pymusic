@@ -1,108 +1,102 @@
-import concurrent.futures
 import os
 import click
+import yt_dlp
+from typing import Callable
 from moviepy.audio.io.AudioFileClip import AudioFileClip
-from pytubefix import YouTube, Playlist
 
-from src.util.constants import get_songs_dir, get_playlists_dir
+from src.util.constants import get_songs_dir, get_playlists_dir, get_cookies_path
 
 
 @click.command()
 @click.help_option('-h', '--help')
 @click.argument("url")
-@click.option("-w", "--with-out-oauth", "oauth", default=False, is_flag=True, help="Download without oauth.")
 @click.option("-r", "--replace", "replace", default=False, is_flag=True, help="Replace file if it already exists.")
 @click.option("-t", "--to-playlist", "to_playlist", default=None, type=str, help="Name of playlist to download to.", metavar="NAME")
-@click.option("-s", "--sync", "sync", default=False, is_flag=True, help="Turn off asynchronous downloading.")
-@click.option("-m", "--max-workers", "max_workers", default=5, show_default=True, type=int, help="Input into ThreadPoolExecutor when async.")
-def download(url: str, oauth: bool, replace: bool, to_playlist: str, sync: bool, max_workers: int) -> None:
+@click.option("-n", "--no-cookies", "no_cookies", default=False, is_flag=True, help="Do not download using cookies.")
+def download(url: str, replace: bool, to_playlist: str, no_cookies: bool) -> None:
     """Download music from url
 
     URL is a url to a YouTube video or PUBLIC playlist.
     (wrap url in quotes if there is an & in the url at least on windows cmd)
     """
-    try:
-        if "playlist" in url:
-            songs, to_playlist = download_playlist(url, oauth, replace, sync, max_workers)
-        else:
-            song_name = download_song(url, oauth, replace)
-            songs = [song_name]
+    if not no_cookies and not os.path.exists(get_cookies_path()):
+        click.echo("cookies.txt does not exist.")
+        return
+    elif not no_cookies and os.path.exists(get_cookies_path()):
+        with open(get_cookies_path(), "r") as f:
+            if f.read().strip() == "":
+                click.echo("cookies.txt is empty.")
+                return
 
-        if to_playlist is not None:
-            add_songs_to_playlist(songs, to_playlist)
+    try:
+        songs, playlist_name = download_url(url, replace, no_cookies)
+
+        if "playlist" in url:
+            add_songs_to_playlist(songs, playlist_name if to_playlist is None else to_playlist)
+        else:
+            if to_playlist is not None:
+                add_songs_to_playlist(songs, to_playlist)
     except click.Abort:
         pass
     except Exception as e:
         click.echo(f"Error occurred: {e}.")
 
 
-def download_playlist(url, oauth: bool, replace: bool, sync: bool, max_workers: int) -> (list[str], str):
+# Do this to use replace, pretty cool ngl
+def init_download_hook(replace: bool, songs: list[str]) -> Callable[[dict], None]:
 
-    playlist = Playlist(url, use_oauth=oauth, allow_oauth_cache=oauth)
+    def download_hook(status_dict: dict) -> None:
+        if status_dict["status"] == "downloading":
+            click.echo(f"Downloading {status_dict['info_dict']['title']}...\r", nl=False)
+        elif status_dict["status"] == "error":
+            click.echo(f"Error occurred: {status_dict['info_dict']['message']}.\r")
+        elif status_dict["status"] == "finished":
+            click.echo(f"Downloaded {status_dict['info_dict']['title']}.\r", nl=False)
 
-    title = playlist.title
+            title = os.path.basename(status_dict["info_dict"]["filename"])
+            title = title.rsplit(".", 1)[0]
+            new_title = "".join([c for c in title if c.isalnum()]) + ".mp4"
+            os.rename(os.path.join(get_songs_dir(), title + ".mp4"), os.path.join(get_songs_dir(), new_title))
 
-    click.echo(f"Downloading playlist {title}.")
+            path = os.path.join(get_songs_dir(), new_title)
+            new_path = path.rsplit(".", 1)[0] + ".mp3"
+            if replace or (not replace and not os.path.exists(new_path)):
+                if os.path.exists(new_path):
+                    os.remove(new_path)
+                audio = AudioFileClip(path)
+                audio.write_audiofile(new_path, logger=None)
+                click.echo(f"Finished at {new_path}.\r")
+            else:
+                click.echo(f"{new_path} already exists.\r")
+            os.remove(path)
 
-    if sync:
-        songs = []
-        for video in playlist.video_urls:
-            click.echo(f"Downloading {len(songs) + 1}/{len(playlist.video_urls)}")
-            songs.append(download_song(video, oauth, replace))
+            songs.append(new_title[:-1] + "3")
 
-        return songs, title
+    return download_hook
 
-    with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
-        # Get video urls in list because enumerating directly gives waring in pycharm
-        video_urls = [video_url for video_url in playlist.video_urls]
-        # Make dictionary to sort later to keep order
-        futures = {i: executor.submit(download_song, video_url, oauth, replace) for i, video_url in enumerate(video_urls)}
-        # Get dictionary of results
-        results = {i: future.result()  for i, future in futures.items()}
 
-    # Since results are tagged by 0-(len-1) do a for loop to get everything in correct order
-    res = []
-    for i in range(len(results.keys())):
-        res.append(results.get(i))
-    results = res
+def download_url(url: str, replace: bool, no_cookies: bool) -> (list[str], str | None):
 
-    return results, title
+    songs = []
 
-def download_song(url: str, oauth: bool, replace: bool) -> str:
+    options = {
+        "progress_hooks": [init_download_hook(replace, songs)],
+        "quiet": True,
+        "outtmpl": os.path.join(get_songs_dir(), "%(title)s.%(ext)s"),
+        "no_warnings": True,
+        "noprogress": True,
+        "restrictfilenames": True,
+        "ignoreerrors": True,
+    }
+    if not no_cookies:
+        options["cookiefile"] = get_cookies_path()
 
-    # Get YouTube object
-    youtube = YouTube(url, use_oauth=oauth, allow_oauth_cache=oauth)#, use_po_token=True)
-    songs_path = get_songs_dir()
-
-    if not os.path.exists(songs_path) and click.confirm(f"{songs_path} does not exist, do you want to create it?", abort=True):
-        os.makedirs(songs_path)
-
-    # Use this to make sure there isn't anything wierd to mess stuff up.
-    title = "".join([c for c in youtube.title if c.isalnum()]) + ".mp4"
-    file_path = os.path.join(songs_path, title)
-
-    # Replace file if it exists
-    if os.path.exists(file_path.removesuffix(".mp4") + ".wav"):
-        if replace:
-            os.remove(file_path)
+    with yt_dlp.YoutubeDL(options) as ydl:
+        info_dict: dict = ydl.extract_info(url, download=True)
+        if "entries" in info_dict.keys():
+            return songs, info_dict["title"]
         else:
-            click.echo(f"{file_path.removesuffix(".mp4") + ".wav"} already exists.")
-            return os.path.basename(file_path.removesuffix(".mp4") + ".wav")
-
-    # Download file
-    click.echo(f"Downloading at {file_path}.")
-    stream = youtube.streams.get_lowest_resolution()
-    path = stream.download(output_path=songs_path, filename=title)
-    click.echo(f"Downloaded at {path}.")
-
-    # Convert mp4 to wav because downloading as mp3 doesn't work with pytube
-    new_path = path.rstrip(".mp4") + ".wav"
-    audio = AudioFileClip(path)
-    audio.write_audiofile(new_path, logger=None)
-    os.remove(path)
-    click.echo(f"Finished at {new_path}.")
-
-    return os.path.basename(new_path)
+            return songs, None
 
 
 def add_songs_to_playlist(songs: list[str], to_playlist: str) -> None:

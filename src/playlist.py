@@ -9,6 +9,7 @@ from src.util.constants import get_playlists_dir, get_song_path, GetSongPathErro
 @click.help_option('-h', '--help')
 def playlist() -> None:
     """Rename, delete, list, list songs, add to, remove from, and create playlists"""
+    pass
 
 
 @playlist.command()
@@ -114,8 +115,8 @@ def add(name: str) -> None:
     if isinstance(song_path, GetSongPathError):
         return
 
-    if not name.endswith(".wav"):
-        name += ".wav"
+    if not name.endswith(".mp3"):
+        name += ".mp3"
 
     playlists_path = get_playlists_dir()
     if not os.path.exists(playlists_path):
@@ -154,8 +155,8 @@ def remove(name: str) -> None:
     if isinstance(song_path, GetSongPathError):
         return
 
-    if not name.endswith(".wav"):
-        name += ".wav"
+    if not name.endswith(".mp3"):
+        name += ".mp3"
 
     playlists_path = get_playlists_dir()
     if not os.path.exists(playlists_path):

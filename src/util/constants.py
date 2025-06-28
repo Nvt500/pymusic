@@ -11,6 +11,9 @@ def get_songs_dir() -> str:
 def get_playlists_dir() -> str:
     return os.path.join(get_executable_path(), "playlists")
 
+def get_cookies_path() -> str:
+    return os.path.join(get_executable_path(), "cookies.txt")
+
 def get_executable_path() -> str:
     return os.path.dirname(sys.argv[0])
 
@@ -27,14 +30,14 @@ def get_song_path(name: str) -> str | GetSongPathError:
         click.echo(f"Songs directory doesn't exist at {songs_path}.")
         return GetSongPathError.NO_SONGS_DIR
 
-    # Add .wav if not specified
-    if not name.endswith(".wav"):
-        name += ".wav"
+    # Add .mp3 if not specified
+    if not name.endswith(".mp3"):
+        name += ".mp3"
 
     # Get path to song
     song_path = os.path.join(songs_path, name)
     if not os.path.exists(song_path):
-        click.echo(f"The song {song_path} doesn't exist.")
+        click.echo(f"The song {song_path} doesn't exist.\n")
         return GetSongPathError.NO_SONG_FILE
 
     return song_path

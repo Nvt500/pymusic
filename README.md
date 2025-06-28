@@ -10,7 +10,7 @@ Or you can run the ```init``` command to create them.
 > pymusic init
 ```
 
-It downloads music from YouTube using ```pytubefix``` and can download individual songs or entire 
+It downloads music from YouTube using ```yt-dlp``` and can download individual songs or entire 
 playlists as long as it's public.
 
 # Installation
@@ -58,23 +58,37 @@ Usage: pymusic download [OPTIONS] URL
   there is an & in the url at least on windows cmd)
 
 Options:
-  -h, --help                 Show this message and exit.
-  -w, --with-out-oauth       Download without oauth.
-  -r, --replace              Replace file if it already exists.
-  -t, --to-playlist NAME     Name of playlist to download to.
-  -s, --sync                 Turn off asynchronous downloading.
-  -m, --max-workers INTEGER  Input into ThreadPoolExecutor when async.
-                             [default: 5]
+  -h, --help              Show this message and exit.
+  -r, --replace           Replace file if it already exists.
+  -t, --to-playlist NAME  Name of playlist to download to.
+  -n, --no-cookies        Do not download using cookies.
 ```
 
-Downloads song or playlist asynchronously as default. Use ```--to-playlist``` to download a 
+Downloads a song or playlist. Use ```--to-playlist``` to download a 
 song or playlist to a specific playlist. It won't download songs again unless ```--replace``` 
 is used then it will replace the already downloaded song. If the song's name changes on YouTube
 you must either change the name manually in songs and in each playlist the song is in, or 
 delete all instances of the name and song and then download it again with the new name. If the 
 playlists name changes, just replace the name of the folder in ```playlists```. It also strips
 all non-alphanumeric characters for song names since there was some trouble in testing where
-there would be wierd characters in the ```songs.txt```.
+there would be weird characters in the ```songs.txt```.
+
+It will skip over private/hidden videos in a playlist, although it will show an error. 
+It will also be unable to download videos that are restricted by the network or something else for whatever reason so it
+may be best to download them somewhere else and transfer them.
+
+### Cookies
+
+When downloading you can get flagged as a bot. In order to prevent this the user must input their 
+cookies into the `cookies.txt`.
+- First, download the [**Get cookies.txt LOCALLY**](https://chromewebstore.google.com/detail/Get%20cookies.txt%20LOCALLY/cclelndahbckbenkjhflpdbgdldlbecc) extension (any other equivalent extension or tool can
+   be used, all that matters is that the cookies are in the **Netscape** format)
+- Second, go to YouTube and login
+- Third, click on the extension, make sure the export format is **Netscape**, and click copy in the top right
+- Lastly, simply paste into the `cookies.txt` file created with the `init` command
+
+The good part is that you should only have to do this once and if you do get some sort of error relating to cookies
+just replace the cookies with fresh ones.
 
 ## Play
 
@@ -92,9 +106,7 @@ Commands:
   song      Play song
 ```
 
-The music player uses ```pygame.mixer``` to pause, resume, change volume, and stop the song. 
-Thus, it is kinda heavy so there is a low cpu mode where it simply plays the wav file with 
-```winsound``` (only available on windows).
+The music player uses ```pygame.mixer``` to pause, resume, change volume, and stop the song.
 
 ### Playlist
 
@@ -106,8 +118,6 @@ Usage: pymusic play playlist [OPTIONS] NAME
 Options:
   -h, --help     Show this message and exit.
   -r, --random   Randomize playlist
-  -l, --low-cpu  Stripped down music player to hopefully take up less
-                 resources
 ```
 
 Play a playlist either in order or shuffled.
@@ -120,9 +130,8 @@ Usage: pymusic play song [OPTIONS] NAME
   Play song
 
 Options:
-  -h, --help     Show this message and exit.
-  -l, --low-cpu  Stripped down music player to hopefully take up less
-                 resources
+  -h, --help    Show this message and exit.
+  -r, --repeat  Repeat a song (forever)
 ```
 
 Play a song.
@@ -147,8 +156,6 @@ Options:
                              [1<=x<=9]
   -r, --random               Randomize playlist (only applies when WHICH is
                              "playlist")
-  -l, --low-cpu              Stripped down music player to hopefully take up
-                             less resources
 ```
 
 Select a song from all songs, playlist from all playlists, or song from a playlist. Easier than

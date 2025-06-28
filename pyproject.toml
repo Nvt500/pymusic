@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pymusic"
-version = "0.1.1"
+version = "0.2.0"
 description = "A cli to download and play music."
 authors = ["Nvt5"]
 license = "MIT"
@@ -12,15 +12,16 @@ exclude = ["playlists", "songs"]
 
 [tool.poetry.dependencies]
 python = "3.13"
-click = "8.1.7"
-pytubefix = "8.13.1"
-moviepy = "2.1.1"
+click = "8.2.1"
+yt-dlp = "2025.6.25"
+moviepy = "2.2.1"
 keyboard = "0.13.5"
-pygame = "2.6.1"
+pygame-ce = "2.5.5"
 PyWinCtl = "0.4.1"
+poetry-core = "^2.1.3"
 
 [tool.poetry.group.dev.dependencies]
-PyInstaller = "6.11.1"
+PyInstaller = "6.14.1"
 
 [build-system]
 requires = ["poetry-core"]

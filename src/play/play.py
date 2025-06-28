@@ -1,13 +1,10 @@
 import os
 import time
-import wave
 import click
 from pywinctl import getActiveWindowTitle
 from random import shuffle
-if os.name == "nt":
-    import winsound
 
-# Remove message from pygame
+# Remove message from pygame-ce
 os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "hide"
 from pygame import mixer
 
@@ -20,28 +17,23 @@ from src.util.selector import Selector
 @click.help_option('-h', '--help')
 def play() -> None:
     """Play music"""
+    pass
 
 
 @play.command()
 @click.help_option('-h', '--help')
 @click.argument("name")
-@click.option("-l", "--low-cpu", "low_cpu", default=False, is_flag=True, help="Stripped down music player to hopefully take up less resources")
 @click.option("-r", "--repeat", "repeat", default=False, is_flag=True, help="Repeat a song (forever)")
-def song(name: str, low_cpu: bool, repeat: bool) -> None:
+def song(name: str, repeat: bool) -> None:
     """Play song"""
 
-    if low_cpu and os.name != "nt":
-        click.echo("Low CPU mode is only for windows.")
-        return
+    _song(name, repeat)
 
-    _song(name, low_cpu, repeat)
-
-def _song(name: str, low_cpu: bool, repeat: bool = False) -> None:
+def _song(name: str, repeat: bool = False) -> None:
 
     terminal_name = getActiveWindowTitle()
 
-    if not low_cpu:
-        mixer.init()
+    mixer.init()
 
     song_path = get_song_path(name)
 
@@ -53,7 +45,7 @@ def _song(name: str, low_cpu: bool, repeat: bool = False) -> None:
     # Play song
     while True:
         try:
-            play_song(song_path, low_cpu, terminal_name)
+            play_song(song_path, terminal_name)
         except KeyboardInterrupt:
             click.echo()
             break
@@ -65,22 +57,16 @@ def _song(name: str, low_cpu: bool, repeat: bool = False) -> None:
 @click.help_option('-h', '--help')
 @click.argument("name")
 @click.option("-r", "--random", "random", default=False, is_flag=True, help="Randomize playlist")
-@click.option("-l", "--low-cpu", "low_cpu", default=False, is_flag=True, help="Stripped down music player to hopefully take up less resources")
-def playlist(name: str, random: bool, low_cpu: bool) -> None:
+def playlist(name: str, random: bool) -> None:
     """Play playlist"""
 
-    if low_cpu and os.name != "nt":
-        click.echo("Low CPU mode is only for windows.")
-        return
+    _playlist(name, random)
 
-    _playlist(name, random, low_cpu)
-
-def _playlist(name: str, random: bool, low_cpu: bool) -> None:
+def _playlist(name: str, random: bool) -> None:
 
     terminal_name = getActiveWindowTitle()
 
-    if not low_cpu:
-        mixer.init()
+    mixer.init()
 
     # Get path to playlists folder
     playlists_path = get_playlists_dir()
@@ -124,23 +110,12 @@ def _playlist(name: str, random: bool, low_cpu: bool) -> None:
             elif song_path is GetSongPathError.NO_SONGS_DIR:
                 return
 
-            play_song(song_path, low_cpu, terminal_name, playlist_volume)
+            play_song(song_path, terminal_name, playlist_volume)
     except KeyboardInterrupt:
         click.echo()
 
 
-def play_song(song_path: str, low_cpu, terminal_name: str, volume_pointer: list[int] = None) -> None:
-
-    if low_cpu:
-        click.echo(f"Playing {os.path.basename(song_path)}.\n")
-        # Need all this or Ctrl-C doesn't work
-        wav = wave.open(song_path, "rb")
-        duration = wav.getnframes() / wav.getframerate()
-        winsound.PlaySound(song_path, winsound.SND_FILENAME | winsound.SND_ASYNC | winsound.SND_NODEFAULT | winsound.SND_NOSTOP | winsound.SND_NOWAIT)
-        start = time.time()
-        while time.time() - start < duration:
-            pass
-        return
+def play_song(song_path: str, terminal_name: str, volume_pointer: list[int] = None) -> None:
 
     click.echo(f"Playing {os.path.basename(song_path)}.\nSpace to (un)pause, enter to skip/stop, arrow keys to control volume.")
 
@@ -204,8 +179,7 @@ def play_song(song_path: str, low_cpu, terminal_name: str, volume_pointer: list[
 @click.argument("which")
 @click.option("--max-items", default=5, type=click.IntRange(1, 9, clamp=True), help="Maximum number of items displayed per page")
 @click.option("-r", "--random", "random", default=False, is_flag=True, help="Randomize playlist (only applies when WHICH is \"playlist\")")
-@click.option("-l", "--low-cpu", "low_cpu", default=False, is_flag=True, help="Stripped down music player to hopefully take up less resources")
-def select(which: str, max_items: int, random: bool, low_cpu: bool) -> None:
+def select(which: str, max_items: int, random: bool) -> None:
     """Select a song or playlist to play.
 
     \b
@@ -216,10 +190,6 @@ def select(which: str, max_items: int, random: bool, low_cpu: bool) -> None:
 
     "song" is the default.
     """
-
-    if low_cpu and os.name != "nt":
-        click.echo("Low CPU mode is only for windows.")
-        return
 
     get_from = False
     if which.lower() in ["from-playlist", "from_playlist", "fromplaylist"]:
@@ -242,7 +212,7 @@ def select(which: str, max_items: int, random: bool, low_cpu: bool) -> None:
 
         if not get_from:
             # Do playlist action with selected playlist
-            _playlist(playlist_name, random, low_cpu)
+            _playlist(playlist_name, random)
             return
 
         playlist_path = os.path.join(playlists_path, playlist_name)
@@ -262,7 +232,7 @@ def select(which: str, max_items: int, random: bool, low_cpu: bool) -> None:
             return
 
         # Do song action with selected song
-        _song(song_name, low_cpu)
+        _song(song_name)
     else:
         # Get songs
         songs_path = get_songs_dir()
@@ -279,4 +249,4 @@ def select(which: str, max_items: int, random: bool, low_cpu: bool) -> None:
             return
 
         # Do song action with selected song
-        _song(song_name, low_cpu)
+        _song(song_name)

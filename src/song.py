@@ -8,6 +8,7 @@ from src.util.constants import get_songs_dir, get_song_path, GetSongPathError, g
 @click.help_option('-h', '--help')
 def song() -> None:
     """Rename, delete, and list songs"""
+    pass
 
 
 @song.command(short_help="Rename a song")
@@ -24,13 +25,13 @@ def rename(name: str) -> None:
     if isinstance(song_path, GetSongPathError):
         return
 
-    if not name.endswith(".wav"):
-        name += ".wav"
+    if not name.endswith(".mp3"):
+        name += ".mp3"
 
     new_name = click.prompt(f"What is the new name of {name}", type=click.STRING)
 
-    if not new_name.endswith(".wav"):
-        new_name += ".wav"
+    if not new_name.endswith(".mp3"):
+        new_name += ".mp3"
 
     click.echo(f"Renamed {name} to {new_name} from {song_path}.")
     new_song_path = song_path.replace(name, new_name)
@@ -71,8 +72,8 @@ def delete(name: str) -> None:
     if isinstance(song_path, GetSongPathError):
         return
 
-    if not name.endswith(".wav"):
-        name += ".wav"
+    if not name.endswith(".mp3"):
+        name += ".mp3"
 
     if not click.confirm(f"Are you sure you want to delete {name}?"):
         click.echo(f"Not deleting {name}.")
@@ -117,4 +118,4 @@ def list_songs() -> None:
         return
 
     for i, song_name in enumerate(os.listdir(songs_path)):
-        click.echo(f"{i+1}. {song_name.removesuffix('.wav')}")
+        click.echo(f"{i+1}. {song_name.removesuffix('.mp3')}")
