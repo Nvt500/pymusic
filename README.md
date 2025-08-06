@@ -153,7 +153,7 @@ Usage: pymusic play select [OPTIONS] WHICH
 Options:
   -h, --help                 Show this message and exit.
   --max-items INTEGER RANGE  Maximum number of items displayed per page
-                             [1<=x<=9]
+                             [1<=x<=10]
   -r, --random               Randomize playlist (only applies when WHICH is
                              "playlist")
 ```

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pymusic"
-version = "0.2.0"
+version = "0.2.1"
 description = "A cli to download and play music."
 authors = ["Nvt5"]
 license = "MIT"
@@ -13,7 +13,7 @@ exclude = ["playlists", "songs"]
 [tool.poetry.dependencies]
 python = "3.13"
 click = "8.2.1"
-yt-dlp = "2025.6.25"
+yt-dlp = "2025.7.21"
 moviepy = "2.2.1"
 keyboard = "0.13.5"
 pygame-ce = "2.5.5"

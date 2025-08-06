@@ -1,5 +1,10 @@
 # pymusic changelog
 
+## 0.2.1 - 8-6-2025 - Bugfix
+
+- Update the `select` subcommand of `play` such that its max items range is 1-10 instead of 1-9 and 
+  the default is now 10 because it makes more sense.
+
 ## 0.2.0 - 6-28-2025 - Bugfix & Quality of Life Changes
 
 - Changed the dependency `pytubefix` to `yt-dlp` so downloading actually works now

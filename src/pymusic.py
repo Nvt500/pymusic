@@ -10,7 +10,7 @@ from src.util.constants import get_songs_dir, get_playlists_dir, get_cookies_pat
 
 @click.group()
 @click.help_option('-h', '--help')
-@click.version_option('0.2.0', '-v', '--version', message='%(prog)s %(version)s', prog_name='pymusic')
+@click.version_option('0.2.1', '-v', '--version', message='%(prog)s %(version)s', prog_name='pymusic')
 def cli() -> None:
     """A cli to download and play music."""
     pass

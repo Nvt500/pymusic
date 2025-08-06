@@ -177,7 +177,7 @@ def play_song(song_path: str, terminal_name: str, volume_pointer: list[int] = No
 @play.command()
 @click.help_option('-h', '--help')
 @click.argument("which")
-@click.option("--max-items", default=5, type=click.IntRange(1, 9, clamp=True), help="Maximum number of items displayed per page")
+@click.option("--max-items", default=10, type=click.IntRange(1, 10, clamp=True), help="Maximum number of items displayed per page")
 @click.option("-r", "--random", "random", default=False, is_flag=True, help="Randomize playlist (only applies when WHICH is \"playlist\")")
 def select(which: str, max_items: int, random: bool) -> None:
     """Select a song or playlist to play.
