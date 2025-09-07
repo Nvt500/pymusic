@@ -45,7 +45,7 @@ def _song(name: str, repeat: bool = False) -> None:
     # Play song
     while True:
         try:
-            play_song(song_path, terminal_name)
+            play_song([song_path], 0, terminal_name)
         except KeyboardInterrupt:
             click.echo()
             break
@@ -102,22 +102,29 @@ def _playlist(name: str, random: bool) -> None:
     # Play each song
     click.echo(f"Playing playlist {name}.\nCtrl-C to quit.\n")
     try:
-        for song_name in songs:
-            song_path = get_song_path(song_name)
-
-            if song_path is GetSongPathError.NO_SONG_FILE:
-                continue
-            elif song_path is GetSongPathError.NO_SONGS_DIR:
-                return
-
-            play_song(song_path, terminal_name, playlist_volume)
+        song_index = 0
+        while song_index is not None:
+            song_index = play_song(songs, song_index, terminal_name, playlist_volume)
     except KeyboardInterrupt:
         click.echo()
 
 
-def play_song(song_path: str, terminal_name: str, volume_pointer: list[int] = None) -> None:
+def play_song(songs: list[str | GetSongPathError], song_index: int, terminal_name: str, volume_pointer: list[int] = None) -> int | None:
 
-    click.echo(f"Playing {os.path.basename(song_path)}.\nSpace to (un)pause, enter to skip/stop, arrow keys to control volume.")
+    next_song_index = song_index + 1 if song_index < len(songs) - 1 else None
+    # \r means we gotta fill up that empty space
+    max_spaces = len(songs[next_song_index]) if next_song_index is not None else 4
+    for i in range(song_index + 2, len(songs)):
+        if len(songs[i]) > max_spaces:
+            max_spaces = len(songs[i])
+
+    song_path = get_song_path(songs[song_index])
+    if song_path is GetSongPathError.NO_SONG_FILE:
+        return next_song_index
+    elif song_path is GetSongPathError.NO_SONGS_DIR:
+        return None
+
+    click.echo(f"Playing {os.path.basename(song_path)}.\nSpace to (un)pause, enter to skip/stop, arrow keys to control volume and up next.")
 
     sound = mixer.Sound(song_path)
     sound.play()
@@ -155,6 +162,12 @@ def play_song(song_path: str, terminal_name: str, volume_pointer: list[int] = No
                 if volume > 0:
                     volume -= 1
                     sound.set_volume(volume / 10)
+            case "left":
+                if next_song_index is not None and next_song_index > song_index + 1:
+                    next_song_index -= 1
+            case "right":
+                if next_song_index is not None and next_song_index < len(songs) - 1:
+                    next_song_index += 1
 
         now = time.time()
         if not is_paused:
@@ -162,7 +175,10 @@ def play_song(song_path: str, terminal_name: str, volume_pointer: list[int] = No
         then = now
 
         m, s = divmod(int(time_passed), 60)
-        click.echo(f"{m:02d}:{s:02d}/{duration_m:02d}:{duration_s:02d} | Volume: {volume:02d}\r", nl=False)
+        click.echo(f"{m:02d}:{s:02d}/{duration_m:02d}:{duration_s:02d} | "
+                   f"Volume: {volume:02d} | "
+                   f"Next up: {songs[next_song_index] if next_song_index is not None else "None"}"
+                   f"{" " * (max_spaces - len(songs[next_song_index]) if next_song_index is not None else 0)}\r", nl=False)
 
     sound.stop()
     mixer.music.unload()
@@ -172,6 +188,8 @@ def play_song(song_path: str, terminal_name: str, volume_pointer: list[int] = No
 
     if volume_pointer is not None:
         volume_pointer[0] = volume
+
+    return next_song_index
 
 
 @play.command()

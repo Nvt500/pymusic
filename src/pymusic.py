@@ -9,14 +9,14 @@ from src.util.constants import get_songs_dir, get_playlists_dir, get_cookies_pat
 
 
 @click.group()
-@click.help_option('-h', '--help')
-@click.version_option('0.2.1', '-v', '--version', message='%(prog)s %(version)s', prog_name='pymusic')
+@click.help_option("-h", "--help")
+@click.version_option("0.2.2", "-v", "--version", message="%(prog)s %(version)s", prog_name="pymusic")
 def cli() -> None:
     """A cli to download and play music."""
     pass
 
 @cli.command()
-@click.help_option('-h', '--help')
+@click.help_option("-h", "--help")
 def init() -> None:
     """Creates "songs" and "playlists" folder and "cookies.txt" """
 
@@ -39,5 +39,5 @@ cli.add_command(song)
 cli.add_command(playlist)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     cli()

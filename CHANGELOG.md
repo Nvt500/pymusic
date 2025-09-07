@@ -1,5 +1,14 @@
 # pymusic changelog
 
+## 0.2.2 - 9-7-2025 - Quality of Life Change
+
+- Update the music player in order to view the upcoming songs by using the arrow keys and jump to the 
+  that song when the song playing ends or the user presses enter
+  - ```text
+    Playing TouchTheSky.mp3.                                                                                                                                                                                                                                            
+    Space to (un)pause, enter to skip/stop, arrow keys to control volume and up next.                                                                                                                                                                                               
+    00:00/03:56 | Volume: 10 | Next up: Bound2.mp3
+
 ## 0.2.1 - 8-6-2025 - Bugfix
 
 - Update the `select` subcommand of `play` such that its max items range is 1-10 instead of 1-9 and 
