@@ -1,11 +1,16 @@
 # -*- mode: python ; coding: utf-8 -*-
 
+from PyInstaller.utils.hooks import copy_metadata
+
+datas = []
+datas += copy_metadata('imageio')
+datas += copy_metadata('moviepy')
 
 a = Analysis(
     ['pymusic.py'],
     pathex=[],
     binaries=[],
-    datas=[],
+    datas=datas,
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},

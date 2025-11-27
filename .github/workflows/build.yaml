@@ -36,7 +36,6 @@ jobs:
       shell: bash
       run: |
         UPX_PATH=$(dirname $(where upx))
-        echo "$UPX_PATH"
         pyinstaller src/pymusic.spec --distpath dist --workpath build --upx-dir $UPX_PATH
 
     - name: Upload Artifact
@@ -111,7 +110,6 @@ jobs:
         shell: bash
         run: |
           UPX_PATH=$(dirname $(which n2epub))
-          echo "$UPX_PATH"
           pyinstaller src/pymusic.spec --distpath dist --workpath build --upx-dir $UPX_PATH
 
       - uses: actions/upload-artifact@v4
