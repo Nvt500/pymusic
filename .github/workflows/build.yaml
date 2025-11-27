@@ -109,7 +109,7 @@ jobs:
       - name: Build pymusic
         shell: bash
         run: |
-          UPX_PATH=$(dirname $(which n2epub))
+          UPX_PATH=$(dirname $(whereis n2epub))
           pyinstaller src/pymusic.spec --distpath dist --workpath build --upx-dir $UPX_PATH
 
       - uses: actions/upload-artifact@v4
