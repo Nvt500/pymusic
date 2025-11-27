@@ -23,13 +23,13 @@ def play() -> None:
 @play.command()
 @click.help_option('-h', '--help')
 @click.argument("name")
-@click.option("-r", "--repeat", "repeat", default=False, is_flag=True, help="Repeat a song (forever)")
-def song(name: str, repeat: bool) -> None:
+@click.option("-l", "--loop", "loop", default=False, is_flag=True, help="Loop song")
+def song(name: str, loop: bool) -> None:
     """Play song"""
 
-    _song(name, repeat)
+    _song(name, loop)
 
-def _song(name: str, repeat: bool = False) -> None:
+def _song(name: str, loop: bool) -> None:
 
     terminal_name = getActiveWindowTitle()
 
@@ -49,7 +49,7 @@ def _song(name: str, repeat: bool = False) -> None:
         except KeyboardInterrupt:
             click.echo()
             break
-        if not repeat:
+        if not loop:
             break
 
 
@@ -57,12 +57,13 @@ def _song(name: str, repeat: bool = False) -> None:
 @click.help_option('-h', '--help')
 @click.argument("name")
 @click.option("-r", "--random", "random", default=False, is_flag=True, help="Randomize playlist")
-def playlist(name: str, random: bool) -> None:
+@click.option("-l", "--loop", "loop", default=False, is_flag=True, help="Loop playlist")
+def playlist(name: str, random: bool, loop: bool) -> None:
     """Play playlist"""
 
-    _playlist(name, random)
+    _playlist(name, random, loop)
 
-def _playlist(name: str, random: bool) -> None:
+def _playlist(name: str, random: bool, loop: bool) -> None:
 
     terminal_name = getActiveWindowTitle()
 
@@ -107,6 +108,18 @@ def _playlist(name: str, random: bool) -> None:
             song_index = play_song(songs, song_index, terminal_name, playlist_volume)
     except KeyboardInterrupt:
         click.echo()
+
+    while loop:
+        click.echo(f"\nReplaying playlist {name}.\n")
+        if random:
+            shuffle(songs)
+        try:
+            song_index = 0
+            while song_index is not None:
+                song_index = play_song(songs, song_index, terminal_name, playlist_volume)
+        except KeyboardInterrupt:
+            click.echo()
+            break
 
 
 def play_song(songs: list[str | GetSongPathError], song_index: int, terminal_name: str, volume_pointer: list[int] = None) -> int | None:
@@ -197,7 +210,8 @@ def play_song(songs: list[str | GetSongPathError], song_index: int, terminal_nam
 @click.argument("which")
 @click.option("--max-items", default=10, type=click.IntRange(1, 10, clamp=True), help="Maximum number of items displayed per page")
 @click.option("-r", "--random", "random", default=False, is_flag=True, help="Randomize playlist (only applies when WHICH is \"playlist\")")
-def select(which: str, max_items: int, random: bool) -> None:
+@click.option("-l", "--loop", "loop", default=False, is_flag=True, help="Loop song or playlist")
+def select(which: str, max_items: int, random: bool, loop: bool) -> None:
     """Select a song or playlist to play.
 
     \b
@@ -230,7 +244,7 @@ def select(which: str, max_items: int, random: bool) -> None:
 
         if not get_from:
             # Do playlist action with selected playlist
-            _playlist(playlist_name, random)
+            _playlist(playlist_name, random, loop)
             return
 
         playlist_path = os.path.join(playlists_path, playlist_name)
@@ -250,7 +264,7 @@ def select(which: str, max_items: int, random: bool) -> None:
             return
 
         # Do song action with selected song
-        _song(song_name)
+        _song(song_name, loop)
     else:
         # Get songs
         songs_path = get_songs_dir()
@@ -267,4 +281,4 @@ def select(which: str, max_items: int, random: bool) -> None:
             return
 
         # Do song action with selected song
-        _song(song_name)
+        _song(song_name, loop)

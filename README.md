@@ -121,6 +121,7 @@ Usage: pymusic play playlist [OPTIONS] NAME
 Options:
   -h, --help     Show this message and exit.
   -r, --random   Randomize playlist
+  -l, --loop    Loop playlist
 ```
 
 Play a playlist either in order or shuffled.
@@ -134,7 +135,7 @@ Usage: pymusic play song [OPTIONS] NAME
 
 Options:
   -h, --help    Show this message and exit.
-  -r, --repeat  Repeat a song (forever)
+  -l, --loop  Loop song
 ```
 
 Play a song.
@@ -159,6 +160,7 @@ Options:
                              [1<=x<=10]
   -r, --random               Randomize playlist (only applies when WHICH is
                              "playlist")
+  -l, --loop                 Loop song or playlist
 ```
 
 Select a song from all songs, playlist from all playlists, or song from a playlist. Easier than

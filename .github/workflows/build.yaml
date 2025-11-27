@@ -32,7 +32,7 @@ jobs:
         install-only: true
 
     - name: Build pymusic
-      run: pyinstaller src/pymusic.spec --distpath dist --workpath build
+      run: pyinstaller src/pymusic.spec --distpath dist --workpath build --upx-dir $UPX_PATH
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
@@ -97,8 +97,13 @@ jobs:
           pip install -r requirements.txt
           pip install pyinstaller
 
+      - name: Install UPX
+        uses: crazy-max/ghaction-upx@v3
+        with:
+          install-only: true
+
       - name: Build pymusic
-        run: pyinstaller src/pymusic.spec --distpath dist --workpath build
+        run: pyinstaller src/pymusic.spec --distpath dist --workpath build --upx-dir $UPX_PATH
 
       - uses: actions/upload-artifact@v4
         with:

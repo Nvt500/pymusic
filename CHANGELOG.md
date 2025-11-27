@@ -1,5 +1,10 @@
 # pymusic changelog
 
+## 0.2.3 - 11-26-2025 - Quality of Life Changes
+
+- Add a loop option for `play playlist`, `play song`, and `play select`
+- Add upx to GitHub actions to lower file size
+
 ## 0.2.2 - 9-7-2025 - Quality of Life Change
 
 - Update the music player in order to view the upcoming songs by using the arrow keys and jump to the 
