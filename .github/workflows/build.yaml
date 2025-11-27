@@ -32,13 +32,11 @@ jobs:
       with:
         install-only: true
 
-    - name: Log upx
+    - name: Get $UPX_PATH
+      shell: bash
       run: |
-        where upx
-        upx --version
-        echo %UPX_PATH%
-        echo $UPX_PATH
-        echo "path: $UPX_PATH"
+        UPX_DIR=$(dirname $(where upx.exe))
+        echo "$UPX_PATH"
 
     - name: Build pymusic
       run: pyinstaller src/pymusic.spec --distpath dist --workpath build --upx-dir $UPX_PATH
@@ -110,6 +108,11 @@ jobs:
         uses: crazy-max/ghaction-upx@v3
         with:
           install-only: true
+
+      - name: Get $UPX_PATH
+        run: |
+          UPX_DIR=$(dirname $(which n2epub))
+          echo "$UPX_PATH"
 
       - name: Build pymusic
         run: pyinstaller src/pymusic.spec --distpath dist --workpath build --upx-dir $UPX_PATH
