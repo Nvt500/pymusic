@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - src/**
+      - .github/workflows/**
   workflow_dispatch:
 
 jobs:
@@ -32,7 +33,10 @@ jobs:
         install-only: true
 
     - name: Build pymusic
-      run: pyinstaller src/pymusic.spec --distpath dist --workpath build --upx-dir=$UPX_PATH
+      run: |
+        echo "$UPX_PATH"
+        echo $UPX_PATH
+        pyinstaller src/pymusic.spec --distpath dist --workpath build --upx-dir=$UPX_PATH
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
