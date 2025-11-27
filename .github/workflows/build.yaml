@@ -32,7 +32,7 @@ jobs:
         install-only: true
 
     - name: Build pymusic
-      run: pyinstaller src/pymusic.spec --distpath dist --workpath build --upx-dir $UPX_PATH
+      run: pyinstaller src/pymusic.spec --distpath dist --workpath build --upx-dir=$UPX_PATH
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
@@ -103,7 +103,7 @@ jobs:
           install-only: true
 
       - name: Build pymusic
-        run: pyinstaller src/pymusic.spec --distpath dist --workpath build --upx-dir $UPX_PATH
+        run: pyinstaller src/pymusic.spec --distpath dist --workpath build --upx-dir=$UPX_PATH
 
       - uses: actions/upload-artifact@v4
         with:
