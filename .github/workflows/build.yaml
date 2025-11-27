@@ -105,9 +105,7 @@ jobs:
           install-only: true
 
       - name: Build pymusic
-        run: |
-          pyinstaller src/pymusic.spec --distpath dist --workpath build --upx-dir $(dirname $(command -v upx))
-          upx dist/pymusic --best --lzma
+        run: pyinstaller src/pymusic.spec --distpath dist --workpath build --upx-dir $(dirname $(command -v upx))
 
       - uses: actions/upload-artifact@v4
         with:
