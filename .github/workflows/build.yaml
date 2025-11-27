@@ -32,14 +32,12 @@ jobs:
       with:
         install-only: true
 
-    - name: Get $UPX_PATH
+    - name: Build pymusic
       shell: bash
       run: |
-        UPX_DIR=$(dirname $(where upx.exe))
+        UPX_PATH=$(dirname $(where upx))
         echo "$UPX_PATH"
-
-    - name: Build pymusic
-      run: pyinstaller src/pymusic.spec --distpath dist --workpath build --upx-dir $UPX_PATH
+        pyinstaller src/pymusic.spec --distpath dist --workpath build --upx-dir $UPX_PATH
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
@@ -109,13 +107,12 @@ jobs:
         with:
           install-only: true
 
-      - name: Get $UPX_PATH
-        run: |
-          UPX_DIR=$(dirname $(which n2epub))
-          echo "$UPX_PATH"
-
       - name: Build pymusic
-        run: pyinstaller src/pymusic.spec --distpath dist --workpath build --upx-dir $UPX_PATH
+        shell: bash
+        run: |
+          UPX_PATH=$(dirname $(which n2epub))
+          echo "$UPX_PATH"
+          pyinstaller src/pymusic.spec --distpath dist --workpath build --upx-dir $UPX_PATH
 
       - uses: actions/upload-artifact@v4
         with:
