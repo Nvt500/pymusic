@@ -1,5 +1,6 @@
 # -*- mode: python ; coding: utf-8 -*-
 
+import sys
 from PyInstaller.utils.hooks import copy_metadata
 
 datas = []
@@ -18,6 +19,9 @@ a = Analysis(
     excludes=[],
     noarchive=False,
     optimize=0,
+    strip=(not sys.platform.startswith('win')),
+    upx=True,
+    upx_exclude=[],
 )
 pyz = PYZ(a.pure)
 
@@ -30,7 +34,7 @@ exe = EXE(
     name='pymusic',
     debug=False,
     bootloader_ignore_signals=False,
-    strip=False,
+    strip=(not sys.platform.startswith('win')),
     upx=True,
     upx_exclude=[],
     runtime_tmpdir=None,
