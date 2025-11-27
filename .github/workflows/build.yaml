@@ -26,6 +26,11 @@ jobs:
         pip install -r requirements.txt
         pip install pyinstaller
 
+    - name: Install UPX
+      uses: crazy-max/ghaction-upx@v3
+      with:
+        install-only: true
+
     - name: Build pymusic
       run: pyinstaller src/pymusic.spec --distpath dist --workpath build
 
