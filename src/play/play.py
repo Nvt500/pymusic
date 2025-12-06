@@ -42,10 +42,12 @@ def _song(name: str, loop: bool) -> None:
 
     click.clear()
 
+    song_volume = [10]
+
     # Play song
     while True:
         try:
-            play_song([song_path], 0, terminal_name)
+            play_song([song_path], 0, terminal_name, song_volume)
         except KeyboardInterrupt:
             click.echo()
             break

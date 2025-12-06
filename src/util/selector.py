@@ -9,7 +9,7 @@ class Selector:
         click.clear()
         page = 0
         # epic oneliner
-        show = lambda : click.echo(f"Page {page+1}.\nPress 'n' for next page, 'b' for previous, or Ctrl-C to quit.\n" +
+        show = lambda : click.echo(f"Page {page+1}.\nPress 'n' or right arrow for next page, 'b' or left arrow for previous, or Ctrl-C to quit.\n" +
                                    "\n".join(
                                        [f"{i}: {item}"
                                         for i, item in enumerate(
@@ -29,11 +29,12 @@ class Selector:
                     break
             except ValueError:
                 pass
-            if key == "n" and page < max_page:
+            # Arrow keys give wierd stuff, but it works, I guess
+            if (key == "n" or key == "àM") and page < max_page:
                 page += 1
                 click.clear()
                 show()
-            elif key == "b" and page > 0:
+            elif (key == "b" or key == "àK") and page > 0:
                 page -= 1
                 click.clear()
                 show()

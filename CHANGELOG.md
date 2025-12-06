@@ -1,5 +1,9 @@
 # pymusic changelog
 
+## 0.2.4 - 12-6-2025 - Bugfix
+
+- Fixed how when looping over a song the volume would reset to 10 rather than how it worked with playlists
+
 ## 0.2.3 - 11-27-2025 - Quality of Life Changes
 
 - Add a loop option for `play playlist`, `play song`, and `play select`
