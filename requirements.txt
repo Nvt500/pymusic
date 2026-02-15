@@ -1,5 +1,5 @@
 click==8.3.1
-yt-dlp==2025.11.12
+yt-dlp==2026.2.4
 moviepy==2.2.1
 keyboard==0.13.5
 pygame-ce==2.5.6

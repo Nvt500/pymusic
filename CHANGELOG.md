@@ -1,5 +1,11 @@
 # pymusic changelog
 
+## 0.2.5 - 2-15-2026 - Quality of Life Change
+
+- Added subcommand `download` to `playlist` command in order to easily extract songs of a playlist
+  from the `songs` folder
+- Updated yt-dlp
+
 ## 0.2.4 - 12-6-2025 - Bugfix
 
 - Fixed how when looping over a song the volume would reset to 10 rather than how it worked with playlists

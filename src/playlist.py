@@ -8,7 +8,7 @@ from src.util.constants import get_playlists_dir, get_song_path, GetSongPathErro
 @click.group()
 @click.help_option('-h', '--help')
 def playlist() -> None:
-    """Rename, delete, list, list songs, add to, remove from, and create playlists"""
+    """Rename, delete, list, list songs, add to, remove from, create, and download playlists"""
     pass
 
 
@@ -192,11 +192,47 @@ def create(name: str) -> None:
     playlists_path = get_playlists_dir()
     if not os.path.exists(playlists_path):
         click.echo(f"Playlists directory doesn't exist at {playlists_path}.")
-        return
 
     os.mkdir(os.path.join(playlists_path, name))
 
     click.echo(f"Created playlist at {os.path.join(playlists_path, name)}.")
 
     with open(os.path.join(playlists_path, name, "songs.txt"), "w") as file:
+        file.close()
+
+
+@playlist.command()
+@click.help_option('-h', '--help')
+@click.argument("name")
+@click.option("-p", "--path", "path", default=get_playlists_dir(), metavar="PATH", help="Destination of downloaded playlist.")
+def download(name: str, path: str) -> None:
+    """Copy the playlist's songs and songs.txt to a specified path"""
+
+    playlists_path = get_playlists_dir()
+    if not os.path.exists(playlists_path):
+        click.echo(f"Playlists directory doesn't exist at {playlists_path}.")
+        return
+
+
+    playlist_path = os.path.join(playlists_path, name)
+    if not os.path.exists(playlist_path):
+        click.echo(f"Playlist doesn't exist at {playlist_path}.")
+        return
+
+    with open(os.path.join(playlist_path, "songs.txt"), "r") as file:
+        songs = [line.strip() for line in file.readlines() if line.strip() != ""]
+
+        path = os.path.join(path, name + "_download")
+        os.mkdir(path)
+        for song in songs:
+            song_path = get_song_path(song)
+            if isinstance(song_path, GetSongPathError):
+                click.echo(f"{song} doesn't exist at {song_path}.")
+                continue
+            shutil.copyfile(song_path, os.path.join(path, song))
+
+        with open(os.path.join(path, "songs.txt"), "w") as f:
+            f.write("\n".join(songs))
+            f.close()
+
         file.close()
