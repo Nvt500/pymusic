@@ -1,5 +1,9 @@
 # pymusic changelog
 
+## 0.2.6 - 5-9-2026 - Bugfix
+
+- Added `yt-dlp-ejs` to fix a bug
+
 ## 0.2.5 - 2-15-2026 - Quality of Life Change
 
 - Added subcommand `download` to `playlist` command in order to easily extract songs of a playlist
