@@ -54,6 +54,9 @@ def init_download_hook(replace: bool, songs: list[str]) -> Callable[[dict], None
             click.echo(f"Downloaded {status_dict['info_dict']['title']}.\r", nl=False)
 
             title = os.path.basename(status_dict["info_dict"]["filename"])
+            if title == "_.mp4": # Japanese titles are funky also... whatever it works
+                title = status_dict["info_dict"]["title"]
+                os.rename(status_dict["info_dict"]["filename"], os.path.join(get_songs_dir(), title + ".mp4"))
             title = title.rsplit(".", 1)[0]
             new_title = "".join([c for c in title if c.isalnum()]) + ".mp4"
             os.rename(os.path.join(get_songs_dir(), title + ".mp4"), os.path.join(get_songs_dir(), new_title))

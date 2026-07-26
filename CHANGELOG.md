@@ -1,5 +1,9 @@
 # pymusic changelog
 
+## 0.2.7 - 7-26-2026 - Bugfix
+
+- Downloading songs with japanese titles resulted in `_.mp4` files so added a quickfix
+
 ## 0.2.6 - 5-9-2026 - Bugfix
 
 - Added `yt-dlp-ejs` to fix a bug
