@@ -117,7 +117,7 @@ def add_songs_to_playlist(songs: list[str], to_playlist: str) -> None:
             file.close()
 
     # Append to songs.txt
-    with open(os.path.join(playlists_path, to_playlist, "songs.txt"), "r+") as file:
+    with open(os.path.join(playlists_path, to_playlist, "songs.txt"), "r+", encoding="utf-8") as file:
         lines = [line.strip() for line in file.readlines() if line.strip() != ""]
         lines.extend(songs)
 
