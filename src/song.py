@@ -48,7 +48,7 @@ def rename(name: str) -> None:
             click.echo(f"{path} does not have a songs.txt.")
             continue
 
-        with open(path, "r+") as file:
+        with open(path, "r+", encoding="utf-8") as file:
             lines = [line.strip() for line in file.readlines() if line.strip() != ""]
             if lines.count(name) > 0:
                 click.echo(f"Renamed {name} to {new_name} from {path}.")
@@ -94,7 +94,7 @@ def delete(name: str) -> None:
             click.echo(f"{path} does not have a songs.txt.")
             continue
 
-        with open(path, "r+") as file:
+        with open(path, "r+", encoding="utf-8") as file:
             lines =  [line.strip() for line in file.readlines() if line.strip() != ""]
             if lines.count(name) > 0:
                 click.echo(f"Removed {name} from {path}.")

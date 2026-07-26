@@ -113,7 +113,7 @@ def add_songs_to_playlist(songs: list[str], to_playlist: str) -> None:
         os.makedirs(os.path.join(playlists_path, to_playlist))
 
     if not os.path.exists(os.path.join(playlists_path, to_playlist, "songs.txt")):
-        with open(os.path.join(playlists_path, to_playlist, "songs.txt"), "w") as file:
+        with open(os.path.join(playlists_path, to_playlist, "songs.txt"), "w", encoding="utf-8") as file:
             file.close()
 
     # Append to songs.txt

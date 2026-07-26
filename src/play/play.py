@@ -90,7 +90,7 @@ def _playlist(name: str, random: bool, loop: bool) -> None:
         return
 
     # Get songs
-    with open(os.path.join(playlist_path, "songs.txt"), "r") as file:
+    with open(os.path.join(playlist_path, "songs.txt"), "r", encoding="utf-8") as file:
         songs = [line.strip() for line in file.readlines() if line.strip() != ""]
         file.close()
 
@@ -256,7 +256,7 @@ def select(which: str, max_items: int, random: bool, loop: bool) -> None:
             return
 
         # Get songs
-        with open(os.path.join(playlist_path, "songs.txt"), "r") as file:
+        with open(os.path.join(playlist_path, "songs.txt"), "r", encoding="utf-8") as file:
             songs = [line.strip() for line in file.readlines() if line.strip() != ""]
             file.close()
 

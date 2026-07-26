@@ -93,7 +93,7 @@ def list_songs(name: str) -> None:
         click.echo(f"Playlist doesn't exist at {playlist_path}.")
         return
 
-    with open(os.path.join(playlist_path, "songs.txt"), "r") as file:
+    with open(os.path.join(playlist_path, "songs.txt"), "r", encoding="utf-8") as file:
         lines = [line.strip() for line in file.readlines() if line.strip() != ""]
 
         for i, line in enumerate(lines):
@@ -130,7 +130,7 @@ def add(name: str) -> None:
         click.echo(f"Playlist doesn't exist at {playlist_path}.")
         return
 
-    with open(os.path.join(playlist_path, "songs.txt"), "r+") as file:
+    with open(os.path.join(playlist_path, "songs.txt"), "r+", encoding="utf-8") as file:
         lines = [line.strip() for line in file.readlines() if line.strip() != ""]
         lines.append(name)
 
@@ -170,7 +170,7 @@ def remove(name: str) -> None:
         click.echo(f"Playlist doesn't exist at {playlist_path}.")
         return
 
-    with open(os.path.join(playlist_path, "songs.txt"), "r+") as file:
+    with open(os.path.join(playlist_path, "songs.txt"), "r+", encoding="utf-8") as file:
         lines = [line.strip() for line in file.readlines() if line.strip() != ""]
         while lines.count(name) > 0:
             lines.remove(lines[lines.index(name)])
@@ -197,7 +197,7 @@ def create(name: str) -> None:
 
     click.echo(f"Created playlist at {os.path.join(playlists_path, name)}.")
 
-    with open(os.path.join(playlists_path, name, "songs.txt"), "w") as file:
+    with open(os.path.join(playlists_path, name, "songs.txt"), "w", encoding="utf-8") as file:
         file.close()
 
 
@@ -219,7 +219,7 @@ def download(name: str, path: str) -> None:
         click.echo(f"Playlist doesn't exist at {playlist_path}.")
         return
 
-    with open(os.path.join(playlist_path, "songs.txt"), "r") as file:
+    with open(os.path.join(playlist_path, "songs.txt"), "r", encoding="utf-8") as file:
         songs = [line.strip() for line in file.readlines() if line.strip() != ""]
 
         path = os.path.join(path, name + "_download")
@@ -231,7 +231,7 @@ def download(name: str, path: str) -> None:
                 continue
             shutil.copyfile(song_path, os.path.join(path, song))
 
-        with open(os.path.join(path, "songs.txt"), "w") as f:
+        with open(os.path.join(path, "songs.txt"), "w", encoding="utf-8") as f:
             f.write("\n".join(songs))
             f.close()
 

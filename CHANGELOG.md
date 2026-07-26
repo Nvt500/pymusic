@@ -1,5 +1,9 @@
 # pymusic changelog
 
+## 0.2.9 - 7-27-2026 - Bugfix
+
+- I don't want to talk about it (utf-8 for EVERYTHING)
+
 ## 0.2.8 - 7-27-2026 - Bugfix
 
 - Japanese characters cannot be written to file :facepalm: so fixed (should've tested before push)
