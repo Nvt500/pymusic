@@ -90,6 +90,15 @@ cookies into the `cookies.txt`.
 The good part is that you should only have to do this once and if you do get some sort of error relating to cookies
 just replace the cookies with fresh ones.
 
+### JS Runtime
+
+In order to prevent extra errors a JavaScript runtime is needed like **deno** or **Node.js**.
+It can be done in a single line in the terminal.
+
+Install deno: [https://docs.deno.com/runtime/getting_started/installation/](https://docs.deno.com/runtime/getting_started/installation/)
+
+Install Node.js: [https://nodejs.org/en/download](https://nodejs.org/en/download)
+
 ## Play
 
 ```text
